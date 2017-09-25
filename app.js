@@ -1,5 +1,9 @@
 const express = require('express');
 const app = express();
+const nunjucks = require('nunjucks');
+const morgan = require('morgan');
+const routes = require('./routes/index.js');
+
 // point nunjucks to the directory containing templates and turn off caching; configure returns an Environment
 // instance, which we'll want to use to add Markdown support later.
 var env = nunjucks.configure('views', {noCache: true});
@@ -10,13 +14,13 @@ app.engine('html', nunjucks.render);
 
 var models = require('./models');
 
-models.User.sync({})
-.then(function (){
-  return models.Page.sync({})
-})
+models.db.sync({force:true})
 .then(function() {
   app.listen(3000, function(){
     console.log('Server is listening on port 3000!')
   });
 })
 .catch(console.error);
+
+app.use('/',morgan('dev'));
+app.use('/',routes);
