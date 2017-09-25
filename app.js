@@ -15,7 +15,7 @@ app.engine('html', nunjucks.render);
 
 var models = require('./models');
 
-models.db.sync({force:true})
+models.db.sync(/*{force:true}*/)
 .then(function() {
   app.listen(3000, function(){
     console.log('Server is listening on port 3000!')

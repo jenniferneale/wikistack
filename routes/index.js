@@ -8,7 +8,16 @@ const userRouter = require('./user');
 router.use('/wiki', wikiRouter);
 router.use('/user', userRouter);
 
-
+router.get('/',function(req,res,next){
+	models.Page.findAll()
+	.then(function(p){    
+	res.render('index',{pages:p});
+  })
+  .catch(next);
+	
+	
+	
+});
 
 
 

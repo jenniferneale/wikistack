@@ -11,20 +11,30 @@ router.get('/add',function(req,res){
 	res.render('addpage');
 });
 
-router.get('/:url',function(req,res){
-	var url = req.params.url;
-	//var output = models.Page.route.get();
-	//console.log("\n\nroute.get: " + output);
+router.get('/:urlTitle',function(req,res,next){
+	models.Page.findOne({
+		where: {
+			urlTitle: req.params.urlTitle
+		}
+	})
+	.then(function(foundPage){
+    console.log("foundPage.keys " + Object.keys(foundPage));	
+	res.render('wikipage',{title:foundPage.title,content:foundPage.content,authorName:foundPage.author});
+  })
+  .catch(next);
 });
 
 router.post('/add',function(req,res){
-	console.log("req.body.pageStatus " + req.body.pageStatus);
 	var page = models.Page.build({
 		title: req.body.title,
-		urlTitle: generateUrlTitle(req.body.title),
+		author: req.body.author,
 		content: req.body.content,
 		status: req.body.pageStatus? "open" : "closed"
 	});
-	page.save().then(res.redirect('/'));
+	page.save().then(function(page){
+		res.redirect(page.urlTitle);
+	}
+	
+	);
 });
 
