@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
+  <h3>Something!</h3>
   <h3>Pages</h3>
   <hr>
   <ul class="list-unstyled">
@@ -9,4 +10,7 @@
     <li><a href="/wiki/{{page.urlTitle}}">{{page.title}}</a></li>
   {% endfor %}
   </ul>
+  <hr>
+  <button type='button'><a href = '/wiki/add'>Add New Page</a></button>
+
 {% endblock %}

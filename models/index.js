@@ -8,10 +8,6 @@ const Page = db.define('page', {
 	type:Sequelize.STRING,
 	allowNull:false
 	},
-	author: {
-		type:Sequelize.STRING,
-		allowNull:false
-	},
 	urlTitle: {
 	type:Sequelize.TEXT,
 	allowNull:false,
@@ -59,6 +55,8 @@ const User = db.define('user', {
 	isEmail:true //Do we need a validation object here??
 	}
 })
+
+Page.belongsTo(User, {as: 'author'})
 
 module.exports = {
   db:db,

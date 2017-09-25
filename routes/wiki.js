@@ -18,23 +18,34 @@ router.get('/:urlTitle',function(req,res,next){
 		}
 	})
 	.then(function(foundPage){
-    console.log("foundPage.keys " + Object.keys(foundPage));	
+    console.log("foundPage.keys " + Object.keys(foundPage));
 	res.render('wikipage',{title:foundPage.title,content:foundPage.content,authorName:foundPage.author});
   })
   .catch(next);
 });
 
 router.post('/add',function(req,res){
-	var page = models.Page.build({
-		title: req.body.title,
-		author: req.body.author,
-		content: req.body.content,
-		status: req.body.pageStatus? "open" : "closed"
-	});
-	page.save().then(function(page){
-		res.redirect(page.urlTitle);
-	}
-	
-	);
-});
+	if(req.body)
+	var user = models.User.findOrCreate({
+		where: {
+		name: req.body.author,
+		email: req.body.authorEmail
+		}
+	})
+	.then(function(user){
 
+		return models.Page.create({
+			title: req.body.title,
+			content: req.body.content,
+			status: req.body.pageStatus? "open" : "closed"
+		})
+		.then(function(page){
+			console.log(user)
+			return page.setAuthor(user[0])
+		})
+	})
+
+	.then(function(page){
+		res.redirect(page.urlTitle);
+	});
+});
