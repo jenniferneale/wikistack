@@ -3,6 +3,7 @@ const app = express();
 const nunjucks = require('nunjucks');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
+const bodyParser = require('body-parser');
 
 // point nunjucks to the directory containing templates and turn off caching; configure returns an Environment
 // instance, which we'll want to use to add Markdown support later.
@@ -21,6 +22,7 @@ models.db.sync({force:true})
   });
 })
 .catch(console.error);
-
+app.use('/',bodyParser.urlencoded({extended:true}));
+app.use('/',bodyParser.json());
 app.use('/',morgan('dev'));
 app.use('/',routes);
